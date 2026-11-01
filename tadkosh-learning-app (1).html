@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10152b">
+<meta name="description" content="تطبيق تعلم تدكصهك — قاموس تفاعلي واختبارات وترجمة وقراءة النصوص من الصور.">
+<title>تعلّم تدكصهك | تعلّم بطريقة ممتعة</title>
+<style>
+:root{
+ --bg:#0b1020;--surface:#141d35;--surface2:#1c2947;--surface3:#243657;
+ --text:#f4f7ff;--muted:#aab7d2;--cyan:#67e8f9;--violet:#a78bfa;
+ --green:#86efac;--red:#fca5a5;--line:#344565;
+ --shadow:0 18px 50px #02061766;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding-bottom:105px;color:var(--text);
+ font-family:Tahoma,Arial,sans-serif;background:
+ radial-gradient(ellipse at 10% 0%,#26356a66,transparent 38%),
+ radial-gradient(ellipse at 95% 20%,#07598555,transparent 35%),var(--bg)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hero{position:relative;overflow:hidden;padding:34px 18px 30px;text-align:center;
+ background:linear-gradient(125deg,#075985,#4338ca 62%,#6d28d9);
+ border-radius:0 0 30px 30px;box-shadow:var(--shadow)}
+.hero:before,.hero:after{content:"";position:absolute;border:1px solid #ffffff20;border-radius:50%}
+.hero:before{width:220px;height:220px;top:-135px;right:-40px}
+.hero:after{width:160px;height:160px;bottom:-120px;left:8%}
+.hero-inner{position:relative;z-index:1;max-width:760px;margin:auto}
+.logo{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:19px;
+ background:#ffffff20;border:1px solid #ffffff40;font-size:29px;margin-bottom:9px}
+h1{font-size:clamp(25px,5vw,34px);margin:4px 0 8px}
+.hero p{margin:0;color:#e0e7ff}
+.container{width:min(760px,100%);margin:auto;padding:16px}
+.page{display:none;animation:rise .25s ease}
+.page.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel{background:linear-gradient(145deg,#172541f2,#111c33f2);border:1px solid var(--line);
+ border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 10px 30px #0003}
+h2{font-size:21px;color:var(--cyan);margin:0 0 12px}
+h3{font-size:16px;color:#d8ccff;margin:18px 0 9px}
+.muted,.small{color:var(--muted)}
+.small{font-size:12px}
+.welcome{display:flex;align-items:center;gap:13px}
+.welcome-icon{flex:0 0 48px;height:48px;display:grid;place-items:center;border-radius:16px;
+ background:#0e749055;font-size:24px}
+.welcome p{margin:5px 0 0;color:var(--muted);line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.action-card{border:1px solid var(--line);border-radius:17px;padding:15px;text-align:right;
+ color:var(--text);background:linear-gradient(145deg,var(--surface2),#18243d);
+ transition:.2s;min-height:104px}
+.action-card:active{transform:scale(.98)}
+.action-card .emoji{font-size:25px;display:block;margin-bottom:8px}
+.action-card strong{display:block;font-size:15px}
+.action-card span:last-child{font-size:12px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{padding:14px;border-radius:16px;background:#0d1830;border:1px solid #2d4263}
+.stat b{display:block;font-size:25px;color:var(--cyan);margin-top:5px}
+.card{background:linear-gradient(140deg,#243858,#1b2b47);border:1px solid #405879;
+ border-radius:16px;padding:15px;margin:10px 0}
+.word{font-size:21px;font-weight:bold;color:var(--cyan);line-height:1.6}
+.meaning{color:var(--green);margin-top:5px}
+button.primary,.primary{border:0;color:white;background:linear-gradient(115deg,#0891b2,#4f46e5);
+ border-radius:12px;padding:11px 15px;margin:5px 3px;box-shadow:0 5px 14px #02061733}
+button.secondary{border:1px solid var(--line);color:#e2e8f0;background:#263650;border-radius:12px;padding:10px 14px;margin:5px 3px}
+button.danger{background:#8f2638;color:white;border:0;border-radius:10px;padding:9px 13px;margin:5px}
+button:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{width:100%;padding:13px 14px;border-radius:12px;border:1px solid #405575;
+ background:#0b162b;color:white;margin:7px 0;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #67e8f91a}
+textarea{min-height:110px;resize:vertical}
+label{display:block;color:#cbd5e1;margin-top:9px;font-size:14px}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+.progress{height:9px;background:#0b162b;border-radius:30px;overflow:hidden;margin:12px 0}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#06b6d4,#a78bfa);transition:width .2s}
+.result{color:var(--green);line-height:1.7}
+#preview{width:100%;max-height:300px;object-fit:contain;border-radius:14px;margin-top:10px;background:#080f1d}
+nav{position:fixed;z-index:10;bottom:12px;left:10px;right:10px;margin:auto;max-width:720px;
+ display:flex;justify-content:space-around;gap:3px;padding:7px;background:#0b1428ed;
+ border:1px solid #405575;border-radius:20px;box-shadow:0 12px 35px #0009;backdrop-filter:blur(14px)}
+nav button{flex:1;min-width:0;border:0;background:transparent;color:#aab7d2;border-radius:13px;
+ padding:8px 2px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;font-size:10px}
+nav button .nav-icon{font-size:19px}
+nav button.active-nav{background:#1e3a5f;color:var(--cyan)}
+.footer-note{text-align:center;color:#71809c;font-size:11px;padding:14px}
+@media(min-width:620px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.panel{padding:22px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-inner">
+ <div class="logo">📚</div><h1>تعلّم تدكصهك</h1>
+ <p>اكتشف الكلمات، تعلّم خطوة بخطوة، واختبر معلوماتك</p>
+</div></header>
+
+<main class="container">
+<section id="home" class="page active">
+ <div class="panel">
+  <div class="welcome"><div class="welcome-icon">✨</div><div><h2>مرحباً بك!</h2><p>ابدأ من القاموس الذي تريده، واستمتع برحلة تعلّم تدكصهك.</p></div></div>
+  <div class="grid" style="margin-top:16px">
+   <button class="action-card" onclick="showPage('greetings')"><span class="emoji">👋</span><strong>التحيات</strong><span>عبارات الترحيب</span></button>
+   <button class="action-card" onclick="showPage('pronouns')"><span class="emoji">👥</span><strong>الضمائر</strong><span>أنا، أنت، نحن...</span></button>
+   <button class="action-card" onclick="showPage('verbs')"><span class="emoji">📘</span><strong>الأفعال</strong><span>تعلّم التعبير عن الأفعال</span></button>
+   <button class="action-card" onclick="showPage('custom')"><span class="emoji">⭐</span><strong>كلماتي</strong><span>مفرداتك التي أضفتها</span></button>
+  </div>
+ </div>
+ <div class="panel"><h2>📊 ملخص القواميس</h2><div class="stats">
+  <div class="stat">التحيات<b id="greetingCount">0</b></div><div class="stat">الضمائر<b id="pronounCount">0</b></div>
+  <div class="stat">الأفعال<b id="verbCount">0</b></div><div class="stat">كلماتي<b id="customCount">0</b></div>
+ </div></div>
+ <div class="panel"><h2>💡 نصيحة اليوم</h2><p class="muted">تعلّم بضع كلمات كل يوم، ثم جرّب اختبار معلوماتك لتثبيت ما تعلّمته.</p>
+  <button class="primary" onclick="showPage('quiz')">ابدأ الاختبار 🧠</button></div>
+</section>
+
+<section id="greetings" class="page"><div class="panel"><h2>👋 قاموس التحيات</h2><div id="greetingList"></div><button class="secondary" onclick="showPage('home')">رجوع للرئيسية</button></div></section>
+<section id="pronouns" class="page"><div class="panel"><h2>👥 قاموس الضمائر</h2><div id="pronounList"></div><button class="secondary" onclick="showPage('home')">رجوع للرئيسية</button></div></section>
+<section id="verbs" class="page"><div class="panel"><h2>📘 قاموس الأفعال</h2><div id="verbList"></div><button class="secondary" onclick="showPage('home')">رجوع للرئيسية</button></div></section>
+<section id="custom" class="page"><div class="panel"><h2>⭐ قاموس كلماتي</h2><p class="muted">الكلمات التي تضيفها ستظهر هنا.</p><div id="customList"></div></div></section>
+
+<section id="developerLogin" class="page"><div class="panel"><h2>🔐 دخول المطوّر</h2><p class="muted">أدخل كلمة المرور لفتح أدوات إدارة القواميس.</p>
+ <input type="password" id="developerPassword" placeholder="كلمة المرور" autocomplete="current-password">
+ <button class="primary" onclick="loginDeveloper()">دخول</button><p id="loginMessage" class="result"></p></div></section>
+
+<section id="developer" class="page"><div class="panel"><h2>🛠️ لوحة المطوّر</h2><p class="muted">أضف مفردات جديدة أو نظّم القواميس.</p>
+ <h3>إضافة كلمة</h3><input id="newWord" placeholder="الكلمة بلغة تدكصهك"><input id="newMeaning" placeholder="المعنى بالعربية">
+ <select id="category"><option value="greetings">قاموس التحيات</option><option value="pronouns">قاموس الضمائر</option><option value="verbs">قاموس الأفعال</option><option value="custom">قاموس الكلمات الأخرى</option></select>
+ <button class="primary" onclick="addWord()">💾 حفظ الكلمة</button><p id="message" class="result"></p>
+ <hr><h3>إدارة الكلمات</h3><select id="manageCategory" onchange="renderManageList()"><option value="greetings">التحيات</option><option value="pronouns">الضمائر</option><option value="verbs">الأفعال</option><option value="custom">كلماتي</option></select>
+ <div id="manageList"></div><button class="secondary" onclick="exportWords()">📥 تصدير نسخة احتياطية</button>
+ <button class="secondary" onclick="document.getElementById('importFile').click()">📤 استيراد نسخة احتياطية</button>
+ <input id="importFile" type="file" accept="application/json" hidden onchange="importWords(event)">
+ <button class="secondary" onclick="logoutDeveloper()">🔒 إغلاق لوحة المطوّر</button>
+ <p class="small">تنبيه: كلمة مرور المطوّر داخل ملف HTML وليست حماية آمنة للمعلومات الحساسة.</p>
+ </div></section>
+
+<section id="translate" class="page"><div class="panel"><h2>🌍 المترجم</h2><textarea id="sourceText" placeholder="اكتب النص الذي تريد ترجمته"></textarea>
+ <label>من اللغة</label><select id="fromLang"><option value="ar">العربية</option><option value="en">الإنجليزية</option><option value="fr">الفرنسية</option><option value="es">الإسبانية</option><option value="de">الألمانية</option><option value="it">الإيطالية</option><option value="pt">البرتغالية</option><option value="tr">التركية</option><option value="ru">الروسية</option><option value="zh">الصينية</option><option value="ja">اليابانية</option><option value="ko">الكورية</option><option value="hi">الهندية</option><option value="ur">الأردية</option><option value="id">الإندونيسية</option></select>
+ <label>إلى اللغة</label><select id="toLang"><option value="en">الإنجليزية</option><option value="ar">العربية</option><option value="fr">الفرنسية</option><option value="es">الإسبانية</option><option value="de">الألمانية</option><option value="it">الإيطالية</option><option value="pt">البرتغالية</option><option value="tr">التركية</option><option value="ru">الروسية</option><option value="zh">الصينية</option><option value="ja">اليابانية</option><option value="ko">الكورية</option><option value="hi">الهندية</option><option value="ur">الأردية</option><option value="id">الإندونيسية</option></select>
+ <button class="primary" id="translateBtn" onclick="translateText()">🌐 ترجم الآن</button><div class="card" id="translationResult">ستظهر الترجمة هنا</div>
+ <button class="secondary" onclick="speak(document.getElementById('translationResult').innerText,document.getElementById('toLang').value)">🔊 استمع</button>
+ <button class="secondary" onclick="copyText('translationResult')">📋 نسخ</button><p class="small">تحتاج خدمة الترجمة إلى اتصال بالإنترنت.</p></div></section>
+
+<section id="image" class="page"><div class="panel"><h2>📷 استخراج النص من صورة</h2><p class="muted">اختر صورة تحتوي على نص واضح، ثم ابدأ الاستخراج.</p>
+ <input type="file" id="imageInput" accept="image/*" onchange="previewImage()"><img id="preview" style="display:none" alt="معاينة الصورة">
+ <button class="primary" id="ocrBtn" onclick="readImage()">استخراج النص</button><div class="progress"><div id="ocrProgress" class="progress-bar"></div></div>
+ <p id="ocrStatus" class="small"></p><textarea id="imageText" placeholder="سيظهر النص المستخرج هنا"></textarea>
+ <button class="primary" onclick="translateImageText()">ترجمة النص إلى الإنجليزية</button><div class="card" id="imageTranslation">ستظهر الترجمة هنا</div>
+ <button class="secondary" onclick="copyText('imageText')">📋 نسخ النص</button><p class="small">يتم تحميل مكتبة قراءة الصور عند أول استخدام، لذلك يلزم الإنترنت.</p></div></section>
+
+<section id="quiz" class="page"><div class="panel"><h2>🧠 اختبر معلوماتك</h2><div class="progress"><div id="quizBar" class="progress-bar"></div></div>
+ <p id="quizProgress" class="small"></p><h3 id="question"></h3><div id="answers"></div><p id="quizResult" class="result"></p>
+ <p>النقاط: <b id="score">0</b></p><button class="primary" id="nextQuestionBtn" onclick="nextQuestion()">السؤال التالي</button>
+ <button class="secondary" onclick="restartQuiz()">إعادة الاختبار</button></div></section>
+</main>
+<div class="footer-note">صُنع بحبّ للتعلّم والمعرفة · تعلّم تدكصهك</div>
+<nav>
+ <button class="active-nav" data-page="home" onclick="showPage('home')"><span class="nav-icon">🏠</span>الرئيسية</button>
+ <button data-page="developerLogin" onclick="openDeveloper()"><span class="nav-icon">🛠️</span>المطوّر</button>
+ <button data-page="translate" onclick="showPage('translate')"><span class="nav-icon">🌍</span>الترجمة</button>
+ <button data-page="image" onclick="showPage('image')"><span class="nav-icon">📷</span>الصور</button>
+ <button data-page="quiz" onclick="showPage('quiz')"><span class="nav-icon">🧠</span>اختبار</button>
+</nav>
+
+<script>
+const DEVELOPER_PASSWORD="246810";
+let developerLoggedIn=false;
+const dictionaries={
+ greetings:[{word:"شينا ننشي",meaning:"كيف حالك؟"},{word:"مانا ننسلان",meaning:"ما أخبارك؟"}],
+ pronouns:[{word:"أغاي",meaning:"أنا"},{word:"نين",meaning:"أنت أو أنتِ"},{word:"اندي",meaning:"أنتم أو أنتن"},{word:"أري",meaning:"نحن"},{word:"إِنْڨِي",meaning:"هم أو هن"}],
+ verbs:[{word:"أغاي اغبلمد",meaning:"أنا أتعلم"},{word:"نين نبلمد",meaning:"أنتَ / أنتِ تتعلم"},{word:"اندي اندبلمد",meaning:"أنتم تتعلمون / أنتن تتعلمن"}],custom:[]
+};
+function loadSaved(){try{const s=JSON.parse(localStorage.getItem("tadkoshDictionaries")||"null");if(s)Object.keys(dictionaries).forEach(k=>{if(Array.isArray(s[k]))dictionaries[k]=s[k].filter(x=>x&&typeof x.word==="string"&&typeof x.meaning==="string")})}catch(e){console.warn("تعذر تحميل البيانات",e)}}
+function saveDictionaries(){try{localStorage.setItem("tadkoshDictionaries",JSON.stringify(dictionaries));return true}catch(e){alert("تعذر الحفظ. قد تكون مساحة التخزين ممتلئة.");return false}}
+function showPage(id){if(id==="developer"&&!developerLoggedIn)id="developerLogin";document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active-nav",b.dataset.page===id));if(id==="developer")renderManageList();window.scrollTo({top:0,behavior:"smooth"})}
+function openDeveloper(){document.getElementById("developerPassword").value="";document.getElementById("loginMessage").textContent="";showPage("developerLogin")}
+function loginDeveloper(){if(document.getElementById("developerPassword").value===DEVELOPER_PASSWORD){developerLoggedIn=true;showPage("developer")}else document.getElementById("loginMessage").textContent="كلمة المرور غير صحيحة"}
+function logoutDeveloper(){developerLoggedIn=false;showPage("home")}
+function speak(text,lang="ar"){if(!("speechSynthesis"in window)){alert("النطق غير مدعوم في هذا المتصفح");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.85;speechSynthesis.speak(u)}
+function renderDictionary(key,id){const box=document.getElementById(id);box.innerHTML="";dictionaries[key].forEach(item=>{const card=document.createElement("div");card.className="card";const w=document.createElement("div");w.className="word";w.textContent=item.word;const m=document.createElement("div");m.className="meaning";m.textContent=item.meaning;const b=document.createElement("button");b.className="secondary";b.textContent="🔊 استمع";b.onclick=()=>speak(item.word);card.append(w,m,b);box.append(card)});if(!dictionaries[key].length)box.textContent="لا توجد كلمات في هذا القاموس بعد."}
+function updateStats(){greetingCount.textContent=dictionaries.greetings.length;pronounCount.textContent=dictionaries.pronouns.length;verbCount.textContent=dictionaries.verbs.length;customCount.textContent=dictionaries.custom.length}
+function renderAll(){renderDictionary("greetings","greetingList");renderDictionary("pronouns","pronounList");renderDictionary("verbs","verbList");renderDictionary("custom","customList");updateStats()}
+function addWord(){if(!developerLoggedIn)return;const word=newWord.value.trim(),meaning=newMeaning.value.trim(),category=document.getElementById("category").value;if(!word||!meaning){alert("اكتب الكلمة ومعناها أولاً");return}if(dictionaries[category].some(x=>x.word===word)){alert("هذه الكلمة موجودة بالفعل");return}dictionaries[category].push({word,meaning});if(!saveDictionaries()){dictionaries[category].pop();return}renderAll();renderManageList();newWord.value="";newMeaning.value="";message.textContent="تم حفظ الكلمة بنجاح ✓"}
+function renderManageList(){if(!developerLoggedIn)return;const key=manageCategory.value,box=manageList;box.innerHTML="";dictionaries[key].forEach((item,i)=>{const c=document.createElement("div");c.className="card";const t=document.createElement("b");t.textContent=item.word+" — "+item.meaning;const d=document.createElement("button");d.className="danger";d.textContent="حذف";d.onclick=()=>deleteWord(key,i);c.append(t,d);box.append(c)});if(!dictionaries[key].length)box.textContent="لا توجد كلمات في هذا القاموس."}
+function deleteWord(key,i){if(!developerLoggedIn||!confirm("هل تريد حذف هذه الكلمة؟"))return;const x=dictionaries[key].splice(i,1)[0];if(!saveDictionaries()){dictionaries[key].splice(i,0,x);return}renderAll();renderManageList()}
+function exportWords(){if(!developerLoggedIn)return;const blob=new Blob([JSON.stringify(dictionaries,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="tadkosh-dictionaries.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function importWords(event){if(!developerLoggedIn)return;const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);for(const k of Object.keys(dictionaries)){if(!Array.isArray(data[k]))throw new Error("invalid");dictionaries[k]=data[k].filter(x=>x&&typeof x.word==="string"&&typeof x.meaning==="string")}if(!saveDictionaries())throw new Error("save");renderAll();renderManageList();message.textContent="تم استيراد النسخة الاحتياطية ✓"}catch(e){alert("ملف النسخة الاحتياطية غير صالح.")}event.target.value=""};reader.readAsText(file)}
+function copyText(id){const el=document.getElementById(id),txt=("value"in el?el.value:el.innerText).trim();if(!txt){alert("لا يوجد نص لنسخه");return}if(navigator.clipboard?.writeText)navigator.clipboard.writeText(txt).then(()=>alert("تم النسخ")).catch(()=>alert("تعذر النسخ في هذا المتصفح"));else alert("النسخ غير متاح في هذا المتصفح")}
+async function translateText(){const text=sourceText.value.trim(),from=fromLang.value,to=toLang.value,out=translationResult,btn=translateBtn;if(!text){alert("اكتب النص أولاً");return}if(from===to){out.textContent=text;return}btn.disabled=true;out.textContent="⏳ جاري الترجمة...";try{const r=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(text)+"&langpair="+from+"|"+to);if(!r.ok)throw 0;const d=await r.json();out.textContent=d.responseData?.translatedText||"لم تنجح الترجمة"}catch(e){out.textContent="تعذر الاتصال بخدمة الترجمة. تحقق من الإنترنت."}finally{btn.disabled=false}}
+function previewImage(){const f=imageInput.files[0];if(!f)return;if(!f.type.startsWith("image/")){alert("اختر صورة صالحة");return}preview.src=URL.createObjectURL(f);preview.style.display="block";imageText.value="";ocrProgress.style.width="0%";ocrStatus.textContent="الصورة جاهزة للقراءة"}
+async function readImage(){const f=imageInput.files[0];if(!f){alert("اختر صورة أولاً");return}ocrBtn.disabled=true;imageText.value="جاري تجهيز قارئ الصور...";ocrProgress.style.width="0%";try{if(!window.Tesseract){await new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";s.onload=res;s.onerror=rej;document.head.append(s)})}const result=await Tesseract.recognize(f,"ara+eng",{logger:m=>{if(m.status==="recognizing text"){const p=Math.round(m.progress*100);ocrProgress.style.width=p+"%";ocrStatus.textContent="قراءة الصورة: "+p+"%"}else ocrStatus.textContent="جاري تجهيز محرك القراءة..."}});imageText.value=result.data.text||"لم يتم العثور على نص واضح";ocrStatus.textContent="اكتملت قراءة الصورة ✓";ocrProgress.style.width="100%"}catch(e){imageText.value="تعذرت قراءة الصورة. تحقق من الإنترنت وحاول مجدداً.";ocrStatus.textContent="حدث خطأ أثناء القراءة"}finally{ocrBtn.disabled=false}}
+async function translateImageText(){const t=imageText.value.trim();if(!t){alert("استخرج النص أولاً");return}imageTranslation.textContent="جاري الترجمة...";try{const r=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(t)+"&langpair=ar|en");const d=await r.json();imageTranslation.textContent=d.responseData?.translatedText||"لم تنجح الترجمة"}catch(e){imageTranslation.textContent="تعذر الاتصال بخدمة الترجمة"}}
+const questions=[{q:"ما معنى أغاي؟",a:["أنا","أنت","نحن"],correct:"أنا"},{q:"ما معنى نين؟",a:["هم","أنت أو أنتِ","أنا"],correct:"أنت أو أنتِ"},{q:"ما معنى أري؟",a:["نحن","أنت","هم"],correct:"نحن"},{q:"ما معنى إِنْڨِي؟",a:["أنا","هم أو هن","أنت"],correct:"هم أو هن"},{q:"ما معنى اندي؟",a:["نحن","أنتم أو أنتن","أنا"],correct:"أنتم أو أنتن"}];
+let current=0,score=0,answered=false;
+function renderQuestion(){const q=questions[current];question.textContent=q.q;quizResult.textContent="";quizProgress.textContent="السؤال "+(current+1)+" من "+questions.length;quizBar.style.width=(current/questions.length*100)+"%";nextQuestionBtn.disabled=true;answered=false;answers.innerHTML="";q.a.forEach(a=>{const b=document.createElement("button");b.className="secondary";b.textContent=a;b.onclick=()=>checkAnswer(a);answers.append(b)})}
+function checkAnswer(a){if(answered)return;answered=true;const correct=questions[current].correct;if(a===correct){quizResult.textContent="إجابة صحيحة! أحسنت 👏";score++}else quizResult.textContent="الإجابة الصحيحة: "+correct;document.getElementById("score").textContent=score;answers.querySelectorAll("button").forEach(b=>b.disabled=true);nextQuestionBtn.disabled=false;quizBar.style.width=((current+1)/questions.length*100)+"%"}
+function nextQuestion(){if(!answered)return;if(current<questions.length-1){current++;renderQuestion()}else{question.textContent="انتهى الاختبار 🎉";answers.innerHTML="";quizResult.textContent="نتيجتك: "+score+" من "+questions.length;quizProgress.textContent="أكملت الاختبار";nextQuestionBtn.disabled=true;quizBar.style.width="100%"}}
+function restartQuiz(){current=0;score=0;document.getElementById("score").textContent="0";renderQuestion()}
+loadSaved();renderAll();renderQuestion();
+</script>
+</body>
+</html>
